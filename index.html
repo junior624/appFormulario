@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist de Passagem de Cliente</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: rgba(255, 255, 255, 0.95);
+            --text: #2d3748;
+            --text-light: #718096;
+            --primary: #667eea;
+            --primary-hover: #5a67d8;
+            --success: #48bb78;
+            --success-hover: #38a169;
+            --warning: #ed8936;
+            --border: #e2e8f0;
+            --input-bg: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15), 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            --bg-gradient: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            --container-bg: rgba(26, 32, 44, 0.95);
+            --text: #f7fafc;
+            --text-light: #a0aec0;
+            --border: #4a5568;
+            --input-bg: #2d3748;
+            --primary: #9f7aea;
+            --primary-hover: #b794f6;
+        }
+
+        body.dark .form-input,
+        body.dark .form-input:focus {
+            color: #f7fafc;
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark .form-input:focus {
+            border-color: #9f7aea;
+            background: #374151;
+        }
+
+        body.dark .form-input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark .radio-option {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #f7fafc;
+        }
+
+        body.dark .radio-option:hover {
+            background: rgba(159, 122, 234, 0.1);
+            border-color: #9f7aea;
+        }
+
+        body.dark .radio-option input[type="radio"] {
+            background: #374151;
+            border-color: #4a5568;
+        }
+
+        body.dark .radio-option input[type="radio"]:checked {
+            background: #9f7aea;
+            border-color: #9f7aea;
+        }
+
+        body.dark .radio-option input[type="radio"]:checked + span {
+            color: #9f7aea;
+        }
+
+        body.dark .integration-details {
+            background: rgba(159, 122, 234, 0.1);
+            border-color: rgba(159, 122, 234, 0.3);
+        }
+
+        body.dark .btn-secondary {
+            background: #2d3748;
+            color: #f7fafc;
+            border-color: #4a5568;
+        }
+
+        body.dark .btn-secondary:hover {
+            background: #374151;
+            border-color: #9f7aea;
+        }
+
+        .container {
+            background: var(--container-bg);
+            backdrop-filter: blur(20px);
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary), #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .form-section {
+            background: var(--input-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        .form-input {
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            max-height: 350px;
+            resize: vertical;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--input-bg);
+            user-select: none;
+        }
+
+        .radio-option:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .radio-option input[type="radio"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            background: white;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .radio-option input[type="radio"]:checked::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-option input[type="radio"]:checked + span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .radio-option.selected {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .integration-details {
+            margin-top: 16px;
+            padding: 0 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: var(--radius);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            opacity: 0;
+        }
+
+        .integration-details.active {
+            opacity: 1;
+            max-height: 150px;
+            padding: 20px;
+        }
+
+        .integration-details .form-label {
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #5a67d8);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), var(--success-hover));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .output-section {
+            margin-top: 40px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .output-header h2 {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .entry-count {
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .output-container {
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .output-content {
+            padding: 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .output-content .client-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        body.dark .output-content {
+            color: #f7fafc;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            z-index: 1000;
+            width: 0%;
+        }
+
+        .field-icon {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .validation-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .validation-message.show {
+            opacity: 1;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            z-index: 100;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        body.dark .dark-mode-toggle {
+            background: rgba(45, 55, 72, 0.9);
+            color: #f7fafc;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .output-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .form-section {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .btn-primary:active {
+            animation: pulse 0.2s ease;
+        }
+
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.loading::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-indicator" id="progress"></div>
+    
+    <button class="dark-mode-toggle" id="darkToggle" title="Alternar modo escuro">
+        🌙
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1>✨ Checklist de Passagem - Fase de Cadastros AP</h1>
+            <p></p>
+        </div>
+
+        <div class="form-section">
+            <form id="checklist-form" class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="cliente">
+                        <span class="field-icon">👤</span>
+                        Cliente <span class="required">*</span>
+                    </label>
+                    <input type="text" id="cliente" class="form-input" maxlength="200" required 
+                           placeholder="Nome do cliente">
+                    <div class="validation-message" id="clienteError">Campo obrigatório</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="field-icon">👨‍💼</span>
+                        Gerente de projeto <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gerente" value="Willian" id="gerente-willian">
+                            <span>Willian</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gerente" value="Giovani" id="gerente-giovani">
+                            <span>Giovani</span> 
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="field-icon">⚙️</span>
+                        Instalação
+                    </label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="instalacao" value="cloud + broker" id="instalacao-cloud">
+                            <span>Cloud + Broker</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="instalacao" value="local" id="instalacao-local">
+                            <span>Local</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="field-icon">🔗</span>
+                        Integração RIS/HIS de terceiros
+                    </label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="integracao" value="Sim" id="integracao-sim">
+                            <span>Sim</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="integracao" value="Não" id="integracao-nao">
+                            <span>netRIS</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="integracao" value="Sem integração" id="integracao-sem">
+                            <span>Sem integração</span>
+                        </label>
+                    </div>
+                    
+                    <div class="integration-details" id="concluida-container">
+                        <label class="form-label">
+                            <span class="field-icon">✅</span>
+                            Integração concluída?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="concluida" value="Sim" id="concluida-sim">
+                                <span>Sim</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="concluida" value="Não" id="concluida-nao">
+                                <span>Não</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="field-icon">🏥</span>
+                        Telerradiologia
+                    </label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="telerradiologia" value="Sim" id="telerradiologia-sim">
+                            <span>Sim</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="telerradiologia" value="Não" id="telerradiologia-nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="field-icon">📥</span>
+                        Importação
+                    </label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="importacao" value="Sim" id="importacao-sim">
+                            <span>Sim</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="importacao" value="Não" id="importacao-nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="field-icon">🖥️</span>
+                        Equipamentos do DEIP adicionados
+                    </label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="equipamentos" value="Sim" id="equipamentos-sim">
+                            <span>Sim</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="equipamentos" value="Parcialmente" id="equipamentos-parcial">
+                            <span>Parcialmente</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="equipamentos" value="Não" id="equipamentos-nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="responsavel">
+                        <span class="field-icon">👥</span>
+                        Responsável pelos cadastros
+                    </label>
+                    <input type="text" id="responsavel" class="form-input" maxlength="200" 
+                           placeholder="Nome do responsável">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="obs">
+                        <span class="field-icon">📝</span>
+                        Observações e pendências
+                    </label>
+                    <textarea id="obs" class="form-input" maxlength="500" rows="5" 
+                              placeholder="Descreva observações gerais, pendências ou informações importantes..." style="resize: vertical;"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" id="add-response">
+                        <span>➕</span>
+                        Adicionar Cliente
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="clear-form">
+                        <span>🗑️</span>
+                        Limpar Formulário
+                    </button>
+                    <button type="button" class="btn btn-success" id="copy-output">
+                        <span>📋</span>
+                        Copiar Relatório
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="output-section">
+            <div class="output-header">
+                <h2>📊 Relatório Consolidado</h2>
+                <div class="entry-count" id="entryCount">0 clientes</div>
+            </div>
+            <div class="output-container">
+                <div class="output-content" id="output">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Nenhum cliente adicionado ainda</p>
+                        <p style="font-size: 0.9rem; margin-top: 8px;">Preencha o formulário acima e clique em "Adicionar Cliente"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span>✅</span>
+        <span id="toastMessage">Operação realizada com sucesso!</span>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let output = '';
+        let clientCount = 0;
+
+        // Funções originais do seu código
+        function getFormData() {
+            const cliente = document.getElementById('cliente').value.trim();
+            const gerente = document.querySelector('input[name="gerente"]:checked');
+            const integracao = document.querySelector('input[name="integracao"]:checked');
+            const telerradiologia = document.querySelector('input[name="telerradiologia"]:checked');
+            const importacao = document.querySelector('input[name="importacao"]:checked');
+            const equipamentos = document.querySelector('input[name="equipamentos"]:checked');
+            const responsavel = document.getElementById('responsavel').value.trim();
+            const obs = document.getElementById('obs').value.trim();
+            const instalacao = document.querySelector('input[name="instalacao"]:checked');
+
+            let integracaoText = '';
+            if (integracao) {
+                integracaoText = integracao.value;
+                if (integracao.value === 'Sim') {
+                    const concluida = document.querySelector('input[name="concluida"]:checked');
+                    if (concluida) {
+                        integracaoText += ` (Concluída: ${concluida.value})`;
+                    }
+                }
+            }
+
+            return {
+                cliente,
+                gerente: gerente ? gerente.value : '',
+                integracao: integracaoText,
+                telerradiologia: telerradiologia ? telerradiologia.value : '',
+                importacao: importacao ? importacao.value : '',
+                equipamentos: equipamentos ? equipamentos.value : '',
+                responsavel,
+                obs,
+                instalacao: instalacao ? instalacao.value : ''
+            };
+        }
+
+        function formatOutput(data) {
+            return `CLIENTE: ${data.cliente.toUpperCase()}
+Gerente de projeto: ${data.gerente}
+Instalação: ${data.instalacao}
+Integração RIS/HIS de terceiros: ${data.integracao}
+Telerradiologia: ${data.telerradiologia}
+Importação: ${data.importacao}
+Equipamentos do DEIP adicionados: ${data.equipamentos}
+Responsável pelos cadastros: ${data.responsavel}
+Observações e pendências: ${data.obs}
+
+-------------------------------
+`;
+        }
+
+        // Funções de melhorias
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function updateProgress() {
+            const requiredFields = document.querySelectorAll('input[required]');
+            let filledRequired = 0;
+            
+            requiredFields.forEach(field => {
+                if (field.value.trim()) filledRequired++;
+            });
+            
+            const progress = (filledRequired / requiredFields.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function updateEntryCount() {
+            const count = document.getElementById('entryCount');
+            count.textContent = `${clientCount} ${clientCount === 1 ? 'cliente' : 'clientes'}`;
+        }
+
+        function addLoadingState(button) {
+            button.classList.add('loading');
+            setTimeout(() => button.classList.remove('loading'), 500);
+        }
+
+        // Event listeners - usando exatamente como o código original
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Adicionar resposta - funcionalidade original
+            document.getElementById('add-response').addEventListener('click', function() {
+                const data = getFormData();
+                if (!data.cliente) {
+                    alert('Preencha o campo Cliente.');
+                    return;
+                }
+                
+                addLoadingState(this);
+                
+                output += formatOutput(data);
+                clientCount++;
+                
+                // Processar o output para destacar nomes de clientes
+                const processedOutput = output.replace(/CLIENTE: ([^\n]+)/g, '<span class="client-name">CLIENTE: $1</span>');
+                
+                document.getElementById('output').innerHTML = processedOutput;
+                updateEntryCount();
+                
+                document.getElementById('checklist-form').reset();
+                document.getElementById('concluida-container').classList.remove('active');
+                
+                // Clear visual selections
+                document.querySelectorAll('.radio-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                updateProgress();
+                showToast('Cliente adicionado com sucesso!');
+            });
+
+            // Limpar formulário - funcionalidade original
+            document.getElementById('clear-form').addEventListener('click', function() {
+                document.getElementById('checklist-form').reset();
+                document.getElementById('concluida-container').classList.remove('active');
+                
+                // Clear visual selections
+                document.querySelectorAll('.radio-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                updateProgress();
+                showToast('Formulário limpo!');
+            });
+
+            // Copiar output - funcionalidade original
+            document.getElementById('copy-output').addEventListener('click', function() {
+                if (output) {
+                    navigator.clipboard.writeText(output).then(() => {
+                        showToast('Relatório copiado para área de transferência!');
+                    });
+                } else {
+                    showToast('Nenhum conteúdo para copiar!');
+                }
+            });
+
+            // Integração RIS/HIS - funcionalidade original
+            document.querySelectorAll('input[name="integracao"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const concluida = document.getElementById('concluida-container');
+                    if (this.value === 'Sim') {
+                        concluida.classList.add('active');
+                    } else {
+                        concluida.classList.remove('active');
+                        document.querySelectorAll('input[name="concluida"]').forEach(c => {
+                            c.checked = false;
+                            c.closest('.radio-option').classList.remove('selected');
+                        });
+                    }
+                });
+            });
+
+            // Dark mode toggle - funcionalidade original melhorada
+            document.getElementById('darkToggle').addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+                this.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                this.title = document.body.classList.contains('dark') ? 'Modo claro' : 'Modo escuro';
+            });
+
+            // Visual feedback para radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove selected class from siblings
+                    const siblings = document.querySelectorAll(`input[name="${this.name}"]`);
+                    siblings.forEach(sibling => {
+                        sibling.closest('.radio-option').classList.remove('selected');
+                    });
+                    // Add selected class to current
+                    this.closest('.radio-option').classList.add('selected');
+                    updateProgress();
+                });
+            });
+
+            // Validação em tempo real
+            document.getElementById('cliente').addEventListener('input', function() {
+                const clienteError = document.getElementById('clienteError');
+                if (!this.value.trim()) {
+                    clienteError.classList.add('show');
+                    this.style.borderColor = '#e53e3e';
+                } else {
+                    clienteError.classList.remove('show');
+                    this.style.borderColor = '';
+                }
+                updateProgress();
+            });
+
+            // Initialize
+            updateProgress();
+            updateEntryCount();
+        });
+    </script>
+</body>
+</html>
